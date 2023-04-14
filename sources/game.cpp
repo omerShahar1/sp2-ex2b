@@ -81,7 +81,6 @@ void Game:: playTurn()
     if(this->check_game_over())
     {
         throw invalid_argument("The Game has finished.");
-        return;
     }
 
     if (&p1 == &p2) 
@@ -94,28 +93,28 @@ void Game:: playTurn()
     
     while(!this->check_game_over())
     {
-        Card c1(this->p1.showTop().get_card_num(), this->p1.showTop().get_card_shape());  
+        Card card1(this->p1.showTop().get_card_num(), this->p1.showTop().get_card_shape());  
         this->p1.throwCard();
-        str += p1.getName() + " played " + c1.toString() + " ";
+        str += p1.getName() + " played " + card1.toString() + " ";
         
-        Card c2(this->p2.showTop().get_card_num(), this->p2.showTop().get_card_shape());
+        Card card2(this->p2.showTop().get_card_num(), this->p2.showTop().get_card_shape());
         this->p2.throwCard();
-        str+=p2.getName()+ " played " + c2.toString() + ". ";
+        str+=p2.getName()+ " played " + card2.toString() + ". ";
         
         count_table+=2;
 
-        if(c1.get_card_num() == c2.get_card_num()) // draw
+        if(card1.get_card_num() == card2.get_card_num()) // draw
         {
-            str += "Draw. ";
             this->count_draw +=1;
             this->count_turn +=1;
+            str += "Draw. ";
             
             if(!this->check_game_over())
             {
-                c1 = Card(this->p1.showTop().get_card_num(), this->p1.showTop().get_card_shape());  
+                card1 = Card(this->p1.showTop().get_card_num(), this->p1.showTop().get_card_shape());  
                 this->p1.throwCard();
                 
-                c2 = Card(this->p2.showTop().get_card_num(), this->p2.showTop().get_card_shape());
+                card2 = Card(this->p2.showTop().get_card_num(), this->p2.showTop().get_card_shape());
                 this->p2.throwCard();
                 
                 count_table+=2;
@@ -123,31 +122,33 @@ void Game:: playTurn()
             }
             else // if the game finish while a draw the players take the cards equally.
             { 
-                this->p1.increase_taken(count_table/2); 
                 this->p2.increase_taken(count_table/2);
+                this->p1.increase_taken(count_table/2); 
             }
 
         }
-        else if(c1.get_card_num() > c2.get_card_num())
+        else if(card1.get_card_num() > card2.get_card_num())
         {
             this->p1.increase_taken(count_table);
-            str += this->p1.getName() + " wins.";
             this->p2.increase_lost();
             this->count_turn +=1;
             count_table=0;
+
+            str += this->p1.getName() + " wins.";
             break;
         }
         else
         { 
             this->p2.increase_taken(count_table);
-            str += this->p1.getName() + " wins.";
             this->p1.increase_lost();
             this->count_turn +=1;
             count_table=0;
+
+            str += this->p1.getName() + " wins.";
             break;
         }
     }
-    this-> log.push_back(str); // add the turns log to the end of the log list.
+    this->log.push_back(str);
 
 }
 
@@ -194,16 +195,16 @@ void Game:: printStats()
     cout << "turns: " + to_string(this->count_turn)<< endl;
     cout << "draws: " + to_string(this->count_draw)<< endl;
     
-    float rate = (float)this->count_draw / (float)this->count_turn;
-    cout << "draw rate: " + to_string((int)(rate*100))+"%\n" << endl;
+    float rate = 100.0 / ((float)this->count_turn / (float)this->count_draw);
+    cout << "draw rate: " + to_string((int)(rate))+"%\n" << endl;
     
     cout << "player1 stats:" << endl;
-    rate = (float)this->count_turn / (float)this->p1.cardesTaken();
-    cout << "win rate:" + to_string((int)(rate*100))+"%\n" << endl;
-    cout << "cards won:" + to_string(this->p1.cardesTaken())+"%\n" << endl;
+    rate = 100.0 / ((float)this->count_turn / ((float)this->count_turn - (float)this->p1.get_lost()));
+    cout << "win rate:" + to_string((int)(rate))+"%\n" << endl;
+    cout << "cards won:" + to_string(this->p1.cardesTaken())+"\n" << endl;
 
     cout << "player2 stats:" << endl;
-    rate = (float)this->count_turn / (float)this->p2.cardesTaken();
-    cout << "win rate:" + to_string((int)(rate*100))+"%\n" << endl;
-    cout << "cards won:" + to_string(this->p2.cardesTaken())+"%\n" << endl;
+    rate = 100.0 / ((float)this->count_turn / ((float)this->count_turn - (float)this->p2.get_lost()));
+    cout << "win rate:" + to_string((int)(rate))+"%\n" << endl;
+    cout << "cards won:" + to_string(this->p2.cardesTaken())+"\n" << endl;
 }

@@ -59,3 +59,8 @@ void Player:: addCard(int num, int shape)
 {
     this->cards.push_back(Card(num, shape));
 }
+
+int Player:: get_lost()
+{
+    return this->lost;
+}

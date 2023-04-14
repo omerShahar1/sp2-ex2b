@@ -11,9 +11,9 @@ namespace ariel
     {
         private:
             string name; // player name
-            int taken, lost; // how many cards the player won and how many lost
+            int taken; // how many cards the player won
+            int lost; // how many turns player lost
             list<Card> cards{}; // save player cards
-            int count_cards;
 
         public:
             Player(); // create new random player
@@ -27,5 +27,6 @@ namespace ariel
             void increase_lost(); // increase lost valuse by 1
             void increase_taken(int); // increase value of the taken
             void addCard(int, int);
+            int get_lost();
     };
 }
