@@ -120,7 +120,7 @@ void Game:: playTurn()
                 count_table+=2;
                 
             }
-            else // if the game finish while a draw the players take the cards equally.
+            else
             { 
                 this->p2.increase_taken(count_table/2);
                 this->p1.increase_taken(count_table/2); 
